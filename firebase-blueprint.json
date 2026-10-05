@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "Farmer": {
+      "title": "Farmer",
+      "description": "Coffee farmer profile registered at collection centres",
+      "type": "object",
+      "properties": {
+        "farmer_id": { "type": "string", "maxLength": 64 },
+        "farmer_name": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "group": { "type": "string", "maxLength": 64 },
+        "satellite": { "type": "string", "maxLength": 64 },
+        "farm_member_number": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["farmer_id", "farmer_name", "group", "satellite", "status"]
+    },
+    "Harvest": {
+      "title": "Harvest",
+      "description": "Coffee delivery harvest transaction from a farmer",
+      "type": "object",
+      "properties": {
+        "harvest_id": { "type": "string", "maxLength": 64 },
+        "receipt_number": { "type": "string", "maxLength": 64 },
+        "farmer_id": { "type": "string", "maxLength": 64 },
+        "farmer_name": { "type": "string", "maxLength": 128 },
+        "group": { "type": "string", "maxLength": 64 },
+        "satellite": { "type": "string", "maxLength": 64 },
+        "collection_date": { "type": "string", "maxLength": 32 },
+        "cherry_heavy": { "type": "number" },
+        "cherry_light": { "type": "number" },
+        "mbuni": { "type": "number" },
+        "total_kg": { "type": "number" },
+        "collection_point": { "type": "string", "maxLength": 64 },
+        "recorded_by": { "type": "string", "maxLength": 128 },
+        "remarks": { "type": "string", "maxLength": 256 },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["harvest_id", "receipt_number", "farmer_id", "collection_date", "total_kg", "recorded_by"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Coffee farmer community or zone group",
+      "type": "object",
+      "properties": {
+        "group_id": { "type": "string", "maxLength": 64 },
+        "group_name": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 256 }
+      },
+      "required": ["group_id", "group_name"]
+    },
+    "Satellite": {
+      "title": "Satellite",
+      "description": "Satellite collection centre / buying station",
+      "type": "object",
+      "properties": {
+        "satellite_id": { "type": "string", "maxLength": 64 },
+        "satellite_name": { "type": "string", "maxLength": 128 },
+        "location": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["satellite_id", "satellite_name"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Field officer, manager, or system administrator",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 64 },
+        "password": { "type": "string", "maxLength": 64 },
+        "role": { "type": "string", "enum": ["Administrator", "Collection Officer", "Manager"] },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] },
+        "assigned_satellite": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["user_id", "name", "username", "role", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Audit trail record for modifications, corrections, and actions",
+      "type": "object",
+      "properties": {
+        "audit_id": { "type": "string", "maxLength": 64 },
+        "user_id": { "type": "string", "maxLength": 64 },
+        "user_name": { "type": "string", "maxLength": 128 },
+        "harvest_id": { "type": "string", "maxLength": 64 },
+        "action": { "type": "string", "maxLength": 64 },
+        "old_value": { "type": "string", "maxLength": 1024 },
+        "new_value": { "type": "string", "maxLength": 1024 },
+        "reason": { "type": "string", "maxLength": 512 },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["audit_id", "user_id", "action", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/farmers/{farmerId}": {
+      "schema": "Farmer",
+      "description": "Collection of coffee farmer records"
+    },
+    "/harvests/{harvestId}": {
+      "schema": "Harvest",
+      "description": "Collection of coffee harvest delivery transactions"
+    },
+    "/groups/{groupId}": {
+      "schema": "Group",
+      "description": "Collection of farmer groups"
+    },
+    "/satellites/{satelliteId}": {
+      "schema": "Satellite",
+      "description": "Collection of satellite coffee collection centres"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of system users and field officers"
+    },
+    "/audit_logs/{auditId}": {
+      "schema": "AuditLog",
+      "description": "Immutable audit log of harvest modifications and actions"
+    }
+  }
+}

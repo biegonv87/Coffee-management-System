@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Farmers collection
+    match /farmers/{farmerId} {
+      allow read: if true;
+      allow create, update: if isValidId(farmerId) &&
+        request.resource.data.farmer_id is string &&
+        request.resource.data.farmer_name is string;
+      allow delete: if false; // Normal field users cannot delete farmers
+    }
+
+    // Harvests collection
+    match /harvests/{harvestId} {
+      allow read: if true;
+      allow create: if isValidId(harvestId) &&
+        request.resource.data.harvest_id is string &&
+        request.resource.data.receipt_number is string &&
+        request.resource.data.farmer_id is string &&
+        request.resource.data.total_kg is number;
+      allow update: if isValidId(harvestId) &&
+        request.resource.data.total_kg is number;
+      allow delete: if false; // Preserving harvest history
+    }
+
+    // Groups collection
+    match /groups/{groupId} {
+      allow read: if true;
+      allow create, update: if isValidId(groupId) &&
+        request.resource.data.group_name is string;
+      allow delete: if false;
+    }
+
+    // Satellites collection
+    match /satellites/{satelliteId} {
+      allow read: if true;
+      allow create, update: if isValidId(satelliteId) &&
+        request.resource.data.satellite_name is string;
+      allow delete: if false;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if isValidId(userId) &&
+        request.resource.data.username is string;
+      allow delete: if false;
+    }
+
+    // Audit Log (Append only)
+    match /audit_logs/{auditId} {
+      allow read: if true;
+      allow create: if isValidId(auditId) &&
+        request.resource.data.audit_id is string &&
+        request.resource.data.action is string;
+      allow update, delete: if false; // Immutable audit log
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "KahawaHarvest - Coffee Collection & Farmer Records",
+  "description": "Professional mobile application for recording and managing coffee harvest collections from farmers, with offline sync, receipts, monthly slips, and audit logs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
